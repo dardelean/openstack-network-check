@@ -5,7 +5,7 @@ set -e
 # OVS file in which bridge_mapping are found
 OVS_FILE="/etc/neutron/plugins/ml2/openvswitch_agent.ini"
 
-
+# First we check in the OVS file if there is a OVS bridge mapping for the neutron network
 function check_net_bridge_mapping(){
         local PHYS_NET=$1
         MAPPINGS=`grep 'bridge_mappings' $OVS_FILE | grep -v '#'`
@@ -27,7 +27,7 @@ function check_net_bridge_mapping(){
         fi
 }
 
-
+# In the second pleace we check if the OVS bridge has a port for a network interface 
 function check_bridge_interface_mapping (){
         local BRIDGE=$1
 
