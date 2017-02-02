@@ -61,7 +61,7 @@ fi
 for NETWORK in $NETWORKS; do
         NETWORK_NAME=`neutron net-show $NETWORK | grep name | awk '{print $4}'`
         echo "=====================" "$NETWORK_NAME" "==================================="
-        # Get provider network for the neutron network
+        # Get physical network
         PHY_NETWORK=`neutron net-show $NETWORK_NAME | grep provider:physical_network | awk '{print $4}'`
 
         if check_net_bridge_mapping $PHY_NETWORK && check_bridge_interface_mapping $BRIDGE; then
