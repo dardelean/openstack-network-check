@@ -9,18 +9,12 @@ OVS_FILE="/etc/neutron/plugins/ml2/openvswitch_agent.ini"
 function check_net_bridge_mapping(){
         local PHYS_NET=$1
         MAPPINGS=`grep 'bridge_mappings' $OVS_FILE | grep -v '#'`
-        #echo $MAPPINGS
 
         for MAP in $(echo $MAPPINGS | cut -d= -f2- | tr ',' ' ')
         do
-                #echo $MAP
                 PHY_MAP=`echo $MAP | awk -F ":" '{print $1}'`
-                #echo $PHY_MAP
-                #BRIDGE=`echo $MAP | awk -F ":" '{print $2}'`
-                #echo $PHYS_NET
                 if [ "$PHY_MAP" == "$PHYS_NET" ]; then
                         BRIDGE=`echo $MAP | awk -F ":" '{print $2}'`
-                        #echo $BRIDGE
                         echo "INFO: network $PHYS_NET has $BRIDGE bridge mapping"
                         return 0
                         break
@@ -36,7 +30,6 @@ function check_net_bridge_mapping(){
 
 function check_bridge_interface_mapping (){
         local BRIDGE=$1
-#        local INTERFACES=$2
 
         BRIDGE_PORTS=`ovs-vsctl list-ports $BRIDGE`
         for PORT in $BRIDGE_PORTS; do
