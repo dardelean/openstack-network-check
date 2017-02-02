@@ -6,7 +6,7 @@ set -e
 OVS_FILE="/etc/neutron/plugins/ml2/openvswitch_agent.ini"
 
 # First we check in the OVS file if there is a OVS bridge mapping for the neutron network
-function check_net_bridge_mapping(){
+function check_net_bridge_mapping() {
         local PHYS_NET=$1
         MAPPINGS=`grep 'bridge_mappings' $OVS_FILE | grep -v '#'`
 
@@ -27,8 +27,8 @@ function check_net_bridge_mapping(){
         fi
 }
 
-# In the second pleace we check if the OVS bridge has a port for a network interface 
-function check_bridge_interface_mapping (){
+# In the second pleace we check if the OVS bridge has a port for a network interface
+function check_bridge_interface_mapping () {
         local BRIDGE=$1
 
         BRIDGE_PORTS=`ovs-vsctl list-ports $BRIDGE`
@@ -45,16 +45,33 @@ function check_bridge_interface_mapping (){
         done
 }
 
-if [ -n "$1" ]; then
-	if [[ "$1" == "-h" || "$1" == "--help" ]] ; then
-		echo "Optional usage: `basename $0` [network ID]"
-		exit 0
-	else
-        	NETWORKS="$1"
-	fi
-else
-        NETWORKS=`neutron net-list | awk 'FNR>3 ' | awk 'FNR<3' | awk '{print $2}'`
-fi
+function usage() {
+	echo -e "usage: $0 options\n"
+	echo -e "This script checks if OpenStack networking is correctly configured\n"
+	echo "OPTIONS:"
+	echo "-h		Show this message"
+	echo "-n <network ID>	Specify network to check"
+	echo -e "-a		Check all available networks in Neutron\n"
+
+	exit 0
+}
+
+[ $# -eq 0 ] && usage
+
+while getopts "hn:a" OPTION; do
+	case $OPTION in
+		n) #get specific network
+			NETWORKS=$OPTARG
+			;;
+		a) #get all networks
+			NETWORKS=`neutron net-list | awk 'FNR>3 ' | awk 'FNR<3' | awk '{print $2}'`
+			;;
+		h | *) #show usage
+			usage
+			;;
+	esac
+done
+
 
 
 
