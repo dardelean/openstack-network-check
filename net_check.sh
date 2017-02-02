@@ -46,7 +46,12 @@ function check_bridge_interface_mapping (){
 }
 
 if [ -n "$1" ]; then
-        NETWORKS="$1"
+	if [[ "$1" == "-h" || "$1" == "--help" ]] ; then
+		echo "Optional usage: `basename $0` [network ID]"
+		exit 0
+	else
+        	NETWORKS="$1"
+	fi
 else
         NETWORKS=`neutron net-list | awk 'FNR>3 ' | awk 'FNR<3' | awk '{print $2}'`
 fi
@@ -60,7 +65,7 @@ for NETWORK in $NETWORKS; do
         PHY_NETWORK=`neutron net-show $NETWORK_NAME | grep provider:physical_network | awk '{print $4}'`
 
         if check_net_bridge_mapping $PHY_NETWORK && check_bridge_interface_mapping $BRIDGE; then
-		echo "Everything looks OK!"
+		echo "Everything looks OK for $NETWORK network!"
 	else
 		echo "Something went wrong!"
 	fi
