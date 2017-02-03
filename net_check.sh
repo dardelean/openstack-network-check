@@ -73,10 +73,10 @@ while getopts "hn:a" OPTION; do
 done
 
 for NETWORK in $NETWORKS; do
-        NETWORK_NAME=`neutron net-show $NETWORK | grep name | awk '{print $4}'`
+        NETWORK_NAME=`neutron net-show $NETWORK | awk '$2 == "name" {print $4}'`
         echo "=====================" "$NETWORK_NAME" "==================================="
         # Get physical network
-        PHY_NETWORK=`neutron net-show $NETWORK_NAME | grep provider:physical_network | awk '{print $4}'`
+        PHY_NETWORK=`neutron net-show $NETWORK_NAME | awk '$2 == "provider:physical_network" {print $4}'`
 
         if check_net_bridge_mapping $PHY_NETWORK && check_bridge_interface_mapping $BRIDGE; then
 		echo "Everything looks OK for $NETWORK network!"
