@@ -64,7 +64,7 @@ while getopts "hn:a" OPTION; do
 			NETWORKS=$OPTARG
 			;;
 		a) #get all networks
-			NETWORKS=`neutron net-list | awk 'FNR>3 ' | sed '$d' | awk '{print $2}'`
+			NETWORKS=`neutron net-list | awk 'NR>3' | sed '$d' | awk '{print $2}'`
 			;;
 		h | *) #show usage
 			usage
