@@ -17,7 +17,7 @@ function check_net_bridge_mapping() {
                         BRIDGE=`echo $MAP | awk -F ":" '{print $2}'`
                         echo "INFO: network $PHYS_NET has $BRIDGE bridge mapping"
                         return 0
-                        break
+ :w                       break
                 fi
         done
 
@@ -64,7 +64,7 @@ while getopts "hn:a" OPTION; do
 			NETWORKS=$OPTARG
 			;;
 		a) #get all networks
-			NETWORKS=`neutron net-list | awk 'NR>3' | sed '$d' | awk '{print $2}'`
+			NETWORKS=`neutron net-list | sed -e '1,3d;$d' | awk '{print $2}'`
 			;;
 		h | *) #show usage
 			usage
