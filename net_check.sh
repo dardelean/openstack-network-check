@@ -72,9 +72,6 @@ while getopts "hn:a" OPTION; do
 	esac
 done
 
-
-
-
 for NETWORK in $NETWORKS; do
         NETWORK_NAME=`neutron net-show $NETWORK | grep name | awk '{print $4}'`
         echo "=====================" "$NETWORK_NAME" "==================================="
@@ -88,6 +85,5 @@ for NETWORK in $NETWORKS; do
 	fi
 
 done
-
 
 echo "========================================================================"
