@@ -8,9 +8,9 @@ OVS_FILE="/etc/neutron/plugins/ml2/openvswitch_agent.ini"
 # First we check in the OVS file if there is a OVS bridge mapping for the neutron network
 function check_net_bridge_mapping() {
         local PHYS_NET=$1
-        MAPPINGS=`grep 'bridge_mappings' $OVS_FILE | grep -v '#'`
+        MAPPINGS=`openstack-config --get $OVS_FILE ovs bridge_mappings`
 
-        for MAP in $(echo $MAPPINGS | cut -d= -f2- | tr ',' ' ')
+        for MAP in $(echo $MAPPINGS | tr ',' ' ')
         do
                 PHY_MAP=`echo $MAP | awk -F ":" '{print $1}'`
                 if [ "$PHY_MAP" == "$PHYS_NET" ]; then
@@ -47,7 +47,7 @@ function check_bridge_interface_mapping () {
 
 function usage() {
 	echo -e "usage: $0 options\n"
-	echo -e "This script checks if OpenStack networking is correctly configured\n"
+	echo -e "This script checks if OpenStack networking is correctly configured, it may require openstack-config package\n"
 	echo "OPTIONS:"
 	echo "-h		Show this message"
 	echo "-n <network ID>	Specify network to check"
