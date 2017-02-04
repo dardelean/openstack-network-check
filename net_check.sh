@@ -17,7 +17,7 @@ function check_net_bridge_mapping() {
                         BRIDGE=`echo $MAP | awk -F ":" '{print $2}'`
                         echo "INFO: network $PHYS_NET has $BRIDGE bridge mapping"
                         return 0
- :w                       break
+                        break
                 fi
         done
 
