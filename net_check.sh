@@ -3,7 +3,13 @@
 set -e
 
 # OVS file in which bridge_mapping are found
+
+# In older OpenStack releases the OVS configurations were in the ml2.conf file
+# in the newer releases there is a separate ovs agent file.
 OVS_FILE="/etc/neutron/plugins/ml2/openvswitch_agent.ini"
+if [ ! -f $OVS_FILE ]; then
+        OVS_FILE="/etc/neutron/plugins/ml2/ml2_conf.ini"
+fi
 
 # First we check in the OVS file if there is a OVS bridge mapping for the neutron network
 function check_net_bridge_mapping() {
